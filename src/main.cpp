@@ -1,14 +1,22 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
 #include "ellipse.h"
+#include "mur.h"
+#include "Cellule.h"
+#include "Liste.h"
 #include <iostream>
 using namespace std;
 
-void draw(SDL_Renderer* renderer, Ellipse e)
+void draw(SDL_Renderer* renderer, Liste l)
 {
-    /* Remplissez cette fonction pour faire l'affichage du jeu */
-    filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255); 
-    
+    //dessiner les ellipses de la liste
+    Cellule *celluleActuelle = l.premier;
+    while (celluleActuelle != nullptr)
+    {
+        Ellipse e = celluleActuelle->ellipse;
+        filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255);
+        celluleActuelle = celluleActuelle->suivant;
+    }
 }
 
 bool handleEvent()
@@ -32,11 +40,35 @@ int main(int argc, char** argv) {
     gWindow = init("Awesome Game");
 
     // Initialisation d'un acteur 'Ellipse'
-    Ellipse e = {100, 100, 0, 0, 50, 255, 0, 0};
+
+    Ellipse e;
+    e.x = rand() % SCREEN_WIDTH;
+    e.y = rand() % SCREEN_HEIGHT;
+    e.rayon = 20;
+    e.r = rand() % 255;
+    e.g = rand() % 255;
+    e.b = rand() % 255;
+
+    Ellipse e2;
+    e2.x = rand() % SCREEN_WIDTH;
+    e2.y = rand() % SCREEN_HEIGHT;
+    e2.rayon = 20;
+    e2.r = rand() % 255;
+    e2.g = rand() % 255;
 
     //vitesse aléatoire entre -5 et 5
     e.vx = rand() % 10 - 5;
     e.vy = rand() % 10 - 5;
+    e2.vx = rand() % 10 - 5;
+    e2.vy = rand() % 10 - 5;
+
+
+
+ //créér une liste d'ellipses
+    Liste liste;
+    liste.premier = nullptr;
+    liste.ajouter(e);
+    liste.ajouter(e2);
 
     if (!gWindow)
     {
@@ -54,23 +86,23 @@ int main(int argc, char** argv) {
         if (!is_running)
             break;
         // GESTION ACTEURS
-        e.x += e.vx;
-        e.y += e.vy;
 
-        //rebond sur les bords
-        if (e.x + e.rayon >= SCREEN_WIDTH || e.x - e.rayon <= 0)
-            e.vx = -e.vx;
-        if (e.y + e.rayon >= SCREEN_HEIGHT || e.y - e.rayon <= 0)
-            e.vy = -e.vy;
-        // ...
+        //deplacement
+
+        //deplacement des ellipses de la liste
+        Cellule *celluleActuelle = liste.premier;
+        while (celluleActuelle != nullptr)
+        {
+            celluleActuelle->ellipse.deplacer(SCREEN_HEIGHT, SCREEN_WIDTH);
+            celluleActuelle = celluleActuelle->suivant;
+        }
         
         // EFFACAGE FRAME
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         
-        // DESSIN
-        draw(renderer, e);
-
+        // DESSIN FRAME
+        draw(renderer, liste);
 
         // VALIDATION FRAME
         SDL_RenderPresent(renderer);
