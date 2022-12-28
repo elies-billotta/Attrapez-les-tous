@@ -30,46 +30,33 @@ bool handleEvent()
     return true;
 }
 
-
 int main(int argc, char** argv) {
     SDL_Window* gWindow;
     SDL_Renderer* renderer;
     bool is_running = true; 
 
-    // Creation de la fenetre
+    // Création de la fenêtre
     gWindow = init("Awesome Game");
 
-    // Initialisation d'un acteur 'Ellipse'
+    // Initialisation des acteurs
 
-    Ellipse e;
-    e.x = rand() % SCREEN_WIDTH;
-    e.y = rand() % SCREEN_HEIGHT;
-    e.rayon = 20;
-    e.r = rand() % 255;
-    e.g = rand() % 255;
-    e.b = rand() % 255;
-
-    Ellipse e2;
-    e2.x = rand() % SCREEN_WIDTH;
-    e2.y = rand() % SCREEN_HEIGHT;
-    e2.rayon = 20;
-    e2.r = rand() % 255;
-    e2.g = rand() % 255;
-
-    //vitesse aléatoire entre -5 et 5
-    e.vx = rand() % 10 - 5;
-    e.vy = rand() % 10 - 5;
-    e2.vx = rand() % 10 - 5;
-    e2.vy = rand() % 10 - 5;
-
-
-
- //créér une liste d'ellipses
+    //boucle pour créer les ellipses et les ajouter à la liste
     Liste liste;
     liste.premier = nullptr;
-    liste.ajouter(e);
-    liste.ajouter(e2);
+    for (int i = 0; i < 10; i++)
+    {
+        Ellipse e;
+        e.x = rand() % 800;
+        e.y = rand() % 600;
+        e.rayon = 50;
+        e.randomVitesse();
+        e.randomCouleur();
 
+        liste.ajouter(e);
+    }
+    
+
+    //création de la liste
     if (!gWindow)
     {
         SDL_Log("Failed to initialize!\n");
