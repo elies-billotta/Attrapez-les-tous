@@ -38,9 +38,7 @@ int main(int argc, char** argv) {
     // Création de la fenêtre
     gWindow = init("Awesome Game");
 
-    // Initialisation des acteurs
-
-    //boucle pour créer les ellipses et les ajouter à la liste
+    // Initialisation des acteurs et de la liste
     Liste liste;
     liste.premier = nullptr;
     for (int i = 0; i < 10; i++)
@@ -55,8 +53,6 @@ int main(int argc, char** argv) {
         liste.ajouter(e);
     }
     
-
-    //création de la liste
     if (!gWindow)
     {
         SDL_Log("Failed to initialize!\n");
@@ -73,8 +69,6 @@ int main(int argc, char** argv) {
         if (!is_running)
             break;
         // GESTION ACTEURS
-
-        //deplacement
 
         //deplacement des ellipses de la liste
         Cellule *celluleActuelle = liste.premier;
