@@ -1,3 +1,6 @@
+#ifndef ELLIPSE_H
+#define ELLIPSE_H
+
 struct Ellipse
 {
     int x;
@@ -8,4 +11,16 @@ struct Ellipse
     unsigned int r;
     unsigned int g;
     unsigned int b;
+
+    void setVitesse(int vx, int vy);
+
+    void randomVitesse();
+
+    void deplacer(int SCREEN_HEIGHT, int SCREEN_WIDTH);
+
+    void randomCouleur();
+
+
 };
+
+#endif
