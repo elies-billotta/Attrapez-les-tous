@@ -1,17 +1,15 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
+#include "ellipse.h"
 
 
 void draw(SDL_Renderer* renderer)
 {
     /* Remplissez cette fonction pour faire l'affichage du jeu */
     
-    /* 
-    filledEllipseRGBA(
-        renderer, ... ?
-    ); 
-    */
-   
+    ellipse e = {100, 100, 0, 0, 50, 255, 0, 0};
+    filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255); 
+    
 }
 
 bool handleEvent()
