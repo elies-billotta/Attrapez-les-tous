@@ -1,13 +1,12 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
 #include "ellipse.h"
+#include <iostream>
+using namespace std;
 
-
-void draw(SDL_Renderer* renderer)
+void draw(SDL_Renderer* renderer, Ellipse e)
 {
     /* Remplissez cette fonction pour faire l'affichage du jeu */
-    
-    ellipse e = {100, 100, 0, 0, 50, 255, 0, 0};
     filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255); 
     
 }
@@ -32,6 +31,13 @@ int main(int argc, char** argv) {
     // Creation de la fenetre
     gWindow = init("Awesome Game");
 
+    // Initialisation d'un acteur 'Ellipse'
+    Ellipse e = {100, 100, 0, 0, 50, 255, 0, 0};
+
+    //vitesse aléatoire entre -5 et 5
+    e.vx = rand() % 10 - 5;
+    e.vy = rand() % 10 - 5;
+
     if (!gWindow)
     {
         SDL_Log("Failed to initialize!\n");
@@ -47,9 +53,15 @@ int main(int argc, char** argv) {
         is_running = handleEvent();
         if (!is_running)
             break;
-
         // GESTION ACTEURS
+        e.x += e.vx;
+        e.y += e.vy;
 
+        //rebond sur les bords
+        if (e.x + e.rayon >= SCREEN_WIDTH || e.x - e.rayon <= 0)
+            e.vx = -e.vx;
+        if (e.y + e.rayon >= SCREEN_HEIGHT || e.y - e.rayon <= 0)
+            e.vy = -e.vy;
         // ...
         
         // EFFACAGE FRAME
@@ -57,13 +69,14 @@ int main(int argc, char** argv) {
         SDL_RenderClear(renderer);
         
         // DESSIN
-        draw(renderer);
+        draw(renderer, e);
+
 
         // VALIDATION FRAME
         SDL_RenderPresent(renderer);
 
         // PAUSE en ms
-        SDL_Delay(1000/30); 
+        SDL_Delay(1000/60); 
     }
 
     //Free resources and close SDL

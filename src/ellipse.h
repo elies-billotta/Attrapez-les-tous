@@ -1,4 +1,4 @@
-struct ellipse
+struct Ellipse
 {
     int x;
     int y;
