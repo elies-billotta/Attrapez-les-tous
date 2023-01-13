@@ -45,6 +45,7 @@ void Liste::supprimer(Ellipse e){
         cellulePrecedente = celluleActuelle;
         celluleActuelle = celluleActuelle->suivant;
     }
+    printList();
 }
 
 //print list

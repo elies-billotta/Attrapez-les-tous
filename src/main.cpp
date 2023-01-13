@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-void draw(SDL_Renderer* renderer, Liste l)
+void draw(SDL_Renderer* renderer, Liste &l)
 {
     //dessiner les ellipses de la liste
     Cellule *celluleActuelle = l.premier;
@@ -19,7 +19,7 @@ void draw(SDL_Renderer* renderer, Liste l)
     }
 }
 
-bool handleEvent(Liste l)
+bool handleEvent(Liste &l)
 {
     /* Remplissez cette fonction pour gérer les inputs utilisateurs */
     SDL_Event e; 
@@ -33,7 +33,6 @@ bool handleEvent(Liste l)
                 if (celluleActuelle->ellipse.clic(e.motion.x, e.motion.y))
                 {
                     l.supprimer(celluleActuelle->ellipse);
-                    l.printList();
                     cout << "-------" << endl;
                     break;
                 }
