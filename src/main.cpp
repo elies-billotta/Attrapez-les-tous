@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-void draw(SDL_Renderer* renderer, Liste l)
+void draw(SDL_Renderer* renderer, Liste &l)
 {
     //dessiner les ellipses de la liste
     Cellule *celluleActuelle = l.premier;
@@ -19,10 +19,27 @@ void draw(SDL_Renderer* renderer, Liste l)
     }
 }
 
-bool handleEvent()
+bool handleEvent(Liste &l)
 {
     /* Remplissez cette fonction pour gérer les inputs utilisateurs */
     SDL_Event e; 
+  while(SDL_PollEvent(&e)){
+        if (e.type == SDL_QUIT) 
+            return false; 
+        if (e.type == SDL_MOUSEBUTTONDOWN){
+            Cellule *celluleActuelle = l.premier;
+            while (celluleActuelle != nullptr)
+            {
+                if (celluleActuelle->ellipse.clic(e.motion.x, e.motion.y))
+                {
+                    l.supprimer(celluleActuelle->ellipse);
+                    cout << "-------" << endl;
+                    break;
+                }
+                celluleActuelle = celluleActuelle->suivant;
+            }
+        }
+    }
     while (SDL_PollEvent(&e)){ 
         if (e.type == SDL_QUIT) 
             return false; 
@@ -37,6 +54,7 @@ int main(int argc, char** argv) {
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
+    //SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     // Initialisation des acteurs et de la liste
     Liste liste;
@@ -44,12 +62,11 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 10; i++)
     {
         Ellipse e;
-        e.x = rand() % 800;
-        e.y = rand() % 600;
-        e.rayon = 50;
+        e.x = rand() % SCREEN_WIDTH;
+        e.y = rand() % SCREEN_HEIGHT;
+        e.rayon = rand() % 50 + 10;
         e.randomVitesse();
         e.randomCouleur();
-
         liste.ajouter(e);
     }
     
@@ -65,7 +82,7 @@ int main(int argc, char** argv) {
     while(true)
     {
         // INPUTS
-        is_running = handleEvent();
+        is_running = handleEvent(liste);
         if (!is_running)
             break;
         // GESTION ACTEURS

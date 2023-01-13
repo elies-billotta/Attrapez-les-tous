@@ -44,3 +44,10 @@ void Ellipse::randomCouleur(){
     this->g = rand() % 255;
     this->b = rand() % 255;
 }
+
+bool Ellipse::clic(int x, int y){
+    if (x >= this->x - this->rayon && x <= this->x + this->rayon && y >= this->y - this->rayon && y <= this->y + this->rayon){
+        return true;
+    }
+    return false;
+}

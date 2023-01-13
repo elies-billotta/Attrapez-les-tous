@@ -20,6 +20,8 @@ struct Ellipse
 
     void randomCouleur();
 
+    bool clic(int x, int y);
+
 
 };
 
