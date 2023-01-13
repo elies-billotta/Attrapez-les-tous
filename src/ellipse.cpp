@@ -51,3 +51,9 @@ bool Ellipse::clic(int x, int y){
     }
     return false;
 }
+
+void Ellipse::setCouleur(int r, int g, int b){
+    this->r = r;
+    this->g = g;
+    this->b = b;
+}

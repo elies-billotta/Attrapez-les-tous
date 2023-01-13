@@ -9,7 +9,6 @@ using namespace std;
 
 void draw(SDL_Renderer* renderer, Liste &l)
 {
-    //dessiner les ellipses de la liste
     Cellule *celluleActuelle = l.premier;
     while (celluleActuelle != nullptr)
     {
@@ -32,6 +31,23 @@ Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
     return nullptr;
 }
 
+void generateEllipse(Liste &l, int posX, int posY, string couleur){
+        Ellipse ellipse;
+        ellipse.x = posX;
+        ellipse.y = posY;
+        ellipse.rayon = rand() % 50 + 10;
+        ellipse.randomVitesse();
+        if (couleur == "rouge") ellipse.setCouleur(255, 0, 0);
+        else if (couleur == "vert") ellipse.setCouleur(0, 255, 0);
+        else if (couleur == "bleu") ellipse.setCouleur(0, 0, 255);
+        else if (couleur == "jaune") ellipse.setCouleur(255, 255, 0);
+        else if (couleur == "cyan") ellipse.setCouleur(0, 255, 255);
+        else if (couleur == "magenta") ellipse.setCouleur(255, 0, 255);
+        else if (couleur == "blanc") ellipse.setCouleur(255, 255, 255);
+        else ellipse.randomCouleur();
+        l.ajouter(ellipse);
+}
+
 bool handleEvent(Liste &l)
 {
     SDL_Event e; 
@@ -43,13 +59,7 @@ bool handleEvent(Liste &l)
                 l.supprimer(*clickOnEllipse(l, e));
             }
             else {
-                Ellipse ellipse;
-                ellipse.x = e.motion.x;
-                ellipse.y = e.motion.y;
-                ellipse.rayon = rand() % 50 + 10;
-                ellipse.randomVitesse();
-                ellipse.randomCouleur();
-                l.ajouter(ellipse);
+                generateEllipse(l, e.motion.x, e.motion.y, "");
             }
         }
     }
@@ -63,22 +73,22 @@ int main(int argc, char** argv) {
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
-    //SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     // Initialisation des acteurs et de la liste
     Liste liste;
     liste.premier = nullptr;
-    for (int i = 0; i < 10; i++)
-    {
-        Ellipse e;
-        e.x = rand() % SCREEN_WIDTH;
-        e.y = rand() % SCREEN_HEIGHT;
-        e.rayon = rand() % 50 + 10;
-        e.randomVitesse();
-        e.randomCouleur();
-        liste.ajouter(e);
-    }
-    
+    int nbEllipse = 10;
+    if (argc > 1){
+        nbEllipse = argc;
+        for (int i = 1 ; i < argc ; i++){
+            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, argv[i]);
+        }    
+    }  
+    else {
+        for(int i = 0 ; i < nbEllipse ; i++){
+            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "");
+        }
+    } 
     if (!gWindow)
     {
         SDL_Log("Failed to initialize!\n");
