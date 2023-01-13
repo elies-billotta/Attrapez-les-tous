@@ -22,7 +22,7 @@ struct Ellipse
 
     bool clic(int x, int y);
 
-
+    void setCouleur(int r, int g, int b);
 };
 
 #endif
