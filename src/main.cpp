@@ -19,29 +19,39 @@ void draw(SDL_Renderer* renderer, Liste &l)
     }
 }
 
+Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
+    Cellule *celluleActuelle = l.premier;
+    while (celluleActuelle != nullptr)
+    {
+        Ellipse ellipse = celluleActuelle->ellipse;
+        if (ellipse.clic(e.motion.x, e.motion.y)){
+            return &(celluleActuelle->ellipse);
+        }
+        celluleActuelle = celluleActuelle->suivant;
+    }
+    return nullptr;
+}
+
 bool handleEvent(Liste &l)
 {
-    /* Remplissez cette fonction pour gérer les inputs utilisateurs */
     SDL_Event e; 
-  while(SDL_PollEvent(&e)){
+    while(SDL_PollEvent(&e)){
         if (e.type == SDL_QUIT) 
             return false; 
         if (e.type == SDL_MOUSEBUTTONDOWN){
-            Cellule *celluleActuelle = l.premier;
-            while (celluleActuelle != nullptr)
-            {
-                if (celluleActuelle->ellipse.clic(e.motion.x, e.motion.y))
-                {
-                    l.supprimer(celluleActuelle->ellipse);
-                    break;
-                }
-                celluleActuelle = celluleActuelle->suivant;
+            if (clickOnEllipse(l, e) != nullptr){
+                l.supprimer(*clickOnEllipse(l, e));
+            }
+            else {
+                Ellipse ellipse;
+                ellipse.x = e.motion.x;
+                ellipse.y = e.motion.y;
+                ellipse.rayon = rand() % 50 + 10;
+                ellipse.randomVitesse();
+                ellipse.randomCouleur();
+                l.ajouter(ellipse);
             }
         }
-    }
-    while (SDL_PollEvent(&e)){ 
-        if (e.type == SDL_QUIT) 
-            return false; 
     }
     return true;
 }
