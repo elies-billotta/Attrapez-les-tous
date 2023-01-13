@@ -11,8 +11,6 @@ struct Liste{
     void ajouter(Ellipse e);
 
     void supprimer(Ellipse e);
-
-    void printList();
 };
 
 #endif

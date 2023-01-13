@@ -33,7 +33,6 @@ bool handleEvent(Liste &l)
                 if (celluleActuelle->ellipse.clic(e.motion.x, e.motion.y))
                 {
                     l.supprimer(celluleActuelle->ellipse);
-                    cout << "-------" << endl;
                     break;
                 }
                 celluleActuelle = celluleActuelle->suivant;

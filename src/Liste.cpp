@@ -39,16 +39,5 @@ void Liste::supprimer(Ellipse e){
         cellulePrecedente = celluleActuelle;
         celluleActuelle = celluleActuelle->suivant;
     }
-    printList();
-}
-
-//print list
-void Liste::printList(){
-    Cellule *celluleActuelle = premier;
-    while (celluleActuelle != nullptr)
-    {
-        cout <<celluleActuelle->ellipse.x << " "<<celluleActuelle->suivant << endl;
-        celluleActuelle = celluleActuelle->suivant;
-    }
 }
 
