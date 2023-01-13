@@ -28,7 +28,7 @@ bool handleEvent(Liste &l)
             return false; 
         if (e.type == SDL_MOUSEBUTTONDOWN){
             Cellule *celluleActuelle = l.premier;
-            while (celluleActuelle->suivant != nullptr)
+            while (celluleActuelle != nullptr)
             {
                 if (celluleActuelle->ellipse.clic(e.motion.x, e.motion.y))
                 {
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
         e.x = rand() % SCREEN_WIDTH;
         e.y = rand() % SCREEN_HEIGHT;
         e.rayon = rand() % 50 + 10;
-        //e.setVitesse(1,1);
+        e.randomVitesse();
         e.randomCouleur();
         liste.ajouter(e);
     }
