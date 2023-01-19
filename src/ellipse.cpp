@@ -2,6 +2,95 @@
 #include <iostream>
 using namespace std;
 
+bool Ellipse::checkCollisionY()
+{
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = 0;
+    rightA = 0 + 200;
+    topA = 150;
+    bottomA = 150 + 150;
+
+    //Calculate the sides of rect B
+    leftB = this->x - this->rayon;
+    rightB = this->x + this->rayon;
+    topB = this->y - this->rayon;
+    bottomB = this->y + this->rayon;
+     //If any of the sides from A are outside of B
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+
+    //If none of the sides from A are outside B
+    return true;
+}
+
+
+bool Ellipse::checkCollisionX()
+{
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = 0;
+    rightA = 0 + 200;
+    topA = 150;
+    bottomA = 150 + 150;
+
+    //Calculate the sides of rect B
+    leftB = this->x - this->rayon;
+    rightB = this->x + this->rayon;
+    topB = this->y - this->rayon;
+    bottomB = this->y + this->rayon;
+     //If any of the sides from A are outside of B
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+
+    //If none of the sides from A are outside B
+    return true;
+}
+
 int randomNumber();
 
 void Ellipse::setVitesse(int vx, int vy){
@@ -31,12 +120,19 @@ void Ellipse::deplacer(int SCREEN_HEIGHT, int SCREEN_WIDTH){
     this->x += this->vx;
     this->y += this->vy;
 
-    if (this->x + this->rayon >= SCREEN_WIDTH || this->x - this->rayon <= 0){
+    if (this->x + this->rayon >= SCREEN_WIDTH || this->x - this->rayon <= 0 ){
         this->vx = -this->vx;
     }
-    if (this->y + this->rayon >= SCREEN_HEIGHT || this->y - this->rayon <= 0){
+    if (this->y + this->rayon >= SCREEN_HEIGHT || this->y - this->rayon <= 0 ){
         this->vy = -this->vy;
     }
+    if (checkCollisionX() ){
+        this->vx = -this->vx;
+    }
+    if (checkCollisionX() ){
+        this->vy = -this->vy;
+    }
+    
 }
 
 void Ellipse::randomCouleur(){
