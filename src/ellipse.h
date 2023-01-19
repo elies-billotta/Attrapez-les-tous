@@ -12,6 +12,9 @@ struct Ellipse
     unsigned int g;
     unsigned int b;
 
+    bool checkCollisionX( );
+    bool checkCollisionY( );
+
     void setVitesse(int vx, int vy);
 
     void randomVitesse();

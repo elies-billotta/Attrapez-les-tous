@@ -1,6 +1,10 @@
 #include "point.h"
 
 struct Mur{
-    Point p1;
-    Point p2;
+    int x;
+    int y;
+    int w;
+    int h;
+
+
 };
