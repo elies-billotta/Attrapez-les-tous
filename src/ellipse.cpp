@@ -9,7 +9,7 @@ bool Ellipse::checkCollisionY()
     int rightA, rightB;
     int topA, topB;
     int bottomA, bottomB;
-
+   
     //Calculate the sides of rect A
     leftA = 0;
     rightA = 0 + 200;
