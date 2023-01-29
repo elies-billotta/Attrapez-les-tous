@@ -81,7 +81,7 @@ std::string Ellipse::collision(Mur mur){
         else if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y+this->rayon <= mur.y){
             return "haut";
         }
-        else if(this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h && this->x+this->rayon >= mur.x + mur.w){
+        else if(this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h && this->x-this->rayon >= mur.x + mur.w){
             return "droite";
         }
         else if(this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y+this->rayon >= mur.y+mur.h){
@@ -90,4 +90,11 @@ std::string Ellipse::collision(Mur mur){
         else return "coin";
     }
     return "";
+}
+
+bool Ellipse::dansMur(Mur mur){
+    if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h){
+        return true;
+    }
+    return false;
 }

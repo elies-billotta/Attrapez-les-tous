@@ -27,6 +27,8 @@ struct Ellipse
     void setCouleur(int r, int g, int b);
 
     std::string collision(Mur mur);
+
+    bool dansMur(Mur mur);
 };
 
 #endif

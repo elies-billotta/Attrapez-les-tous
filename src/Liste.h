@@ -1,4 +1,3 @@
-
 #include "Cellule.h"
 #include "ellipse.h"
 

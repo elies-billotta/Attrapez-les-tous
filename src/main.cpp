@@ -5,6 +5,7 @@
 #include "Cellule.h"
 #include "Liste.h"
 #include <iostream>
+#include<cstdlib>
 using namespace std;
 
 Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
@@ -20,21 +21,14 @@ Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
     return nullptr;
 }
 
-void generateEllipse(Liste &l, int posX, int posY, string couleur){
+Ellipse generateEllipse(int posX, int posY){
         Ellipse ellipse;
         ellipse.x = posX;
         ellipse.y = posY;
         ellipse.rayon = rand() % 50 + 10;
         ellipse.randomVitesse();
-        if (couleur == "rouge") ellipse.setCouleur(255, 0, 0);
-        else if (couleur == "vert") ellipse.setCouleur(0, 255, 0);
-        else if (couleur == "bleu") ellipse.setCouleur(0, 0, 255);
-        else if (couleur == "jaune") ellipse.setCouleur(255, 255, 0);
-        else if (couleur == "cyan") ellipse.setCouleur(0, 255, 255);
-        else if (couleur == "magenta") ellipse.setCouleur(255, 0, 255);
-        else if (couleur == "blanc") ellipse.setCouleur(255, 255, 255);
-        else ellipse.randomCouleur();
-        l.ajouter(ellipse);
+        ellipse.randomCouleur();
+        return ellipse;
 }
 
 bool handleEvent(Liste &l, Mur m)
@@ -49,19 +43,46 @@ bool handleEvent(Liste &l, Mur m)
             }
             //sinon si la souris ne clique pas sur le mur, on ajoute une ellipse
             else if (!m.clic(e.motion.x, e.motion.y)){
-                generateEllipse(l, e.motion.x, e.motion.y, "");
+                Ellipse el = generateEllipse(e.motion.x, e.motion.y);
+                while (el.dansMur(m)){
+                    el = generateEllipse(e.motion.x, e.motion.y);
+                }
+                l.ajouter(el);
             }
         }
     }
     return true;
 }
 
+Ellipse generateRandomEllipse(Mur mur, string couleur){
+    Ellipse ellipse;
+    ellipse.rayon = rand() % 50 +10;
+    ellipse.x = rand() % SCREEN_WIDTH + 10;
+    ellipse.y = rand() % SCREEN_HEIGHT +10;
+    while (ellipse.dansMur(mur) || ellipse.x + ellipse.rayon > SCREEN_WIDTH || ellipse.y + ellipse.rayon > SCREEN_HEIGHT){
+        ellipse.x = rand() % SCREEN_WIDTH + 10;
+        ellipse.y = rand() % SCREEN_HEIGHT +10;
+    }
+
+    ellipse.randomVitesse();
+        if (couleur == "rouge") ellipse.setCouleur(255, 0, 0);
+        else if (couleur == "vert") ellipse.setCouleur(0, 255, 0);
+        else if (couleur == "bleu") ellipse.setCouleur(0, 0, 255);
+        else if (couleur == "jaune") ellipse.setCouleur(255, 255, 0);
+        else if (couleur == "cyan") ellipse.setCouleur(0, 255, 255);
+        else if (couleur == "magenta") ellipse.setCouleur(255, 0, 255);
+        else if (couleur == "blanc") ellipse.setCouleur(255, 255, 255);
+        else ellipse.randomCouleur();
+    return ellipse;
+}
+
 int main(int argc, char** argv) {
+    srand(time(NULL));
     SDL_Window* gWindow;
     SDL_Renderer* renderer;
     bool is_running = true; 
     Mur mur1;
-    mur1.init(200, 200, 200, 150);
+    mur1.init(rand() % 100 + 10, rand() % 100 + 10, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT);
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
@@ -73,12 +94,12 @@ int main(int argc, char** argv) {
     if (argc > 1){
         nbEllipse = argc;
         for (int i = 1 ; i < argc ; i++){
-            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, argv[i]);
+            liste.ajouter(generateRandomEllipse(mur1, argv[i]));
         }    
     }  
     else {
         for(int i = 0 ; i < nbEllipse ; i++){
-            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "");
+            liste.ajouter(generateRandomEllipse(mur1, ""));
         }
     } 
     if (!gWindow)
