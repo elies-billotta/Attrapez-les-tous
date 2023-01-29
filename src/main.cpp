@@ -5,73 +5,8 @@
 #include "Cellule.h"
 #include "Liste.h"
 #include <iostream>
+#include<cstdlib>
 using namespace std;
-
-bool checkCollision( SDL_Rect a, SDL_Rect b )
-{
-    //The sides of the rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
-
-    //Calculate the sides of rect A
-    leftA = a.x;
-    rightA = a.x + a.w;
-    topA = a.y;
-    bottomA = a.y + a.h;
-
-    //Calculate the sides of rect B
-    leftB = b.x;
-    rightB = b.x + b.w;
-    topB = b.y;
-    bottomB = b.y + b.h;
-     //If any of the sides from A are outside of B
-    if( bottomA <= topB )
-    {
-        return false;
-    }
-
-    if( topA >= bottomB )
-    {
-        return false;
-    }
-
-    if( rightA <= leftB )
-    {
-        return false;
-    }
-
-    if( leftA >= rightB )
-    {
-        return false;
-    }
-
-    //If none of the sides from A are outside B
-    return true;
-}
-
-
-
-
-void draw(SDL_Renderer* renderer, Liste &l)
-{
-    Cellule *celluleActuelle = l.premier;
-    while (celluleActuelle != nullptr)
-    {
-        Ellipse e = celluleActuelle->ellipse;
-        filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255);
-        celluleActuelle = celluleActuelle->suivant;
-    }
-
-}
-
-void drawRect(SDL_Renderer* renderer, SDL_Rect wall ){
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &wall);
-
-}
-
 
 Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
     Cellule *celluleActuelle = l.premier;
@@ -86,24 +21,17 @@ Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
     return nullptr;
 }
 
-void generateEllipse(Liste &l, int posX, int posY, string couleur){
+Ellipse generateEllipse(int posX, int posY){
         Ellipse ellipse;
         ellipse.x = posX;
         ellipse.y = posY;
         ellipse.rayon = rand() % 50 + 10;
         ellipse.randomVitesse();
-        if (couleur == "rouge") ellipse.setCouleur(255, 0, 0);
-        else if (couleur == "vert") ellipse.setCouleur(0, 255, 0);
-        else if (couleur == "bleu") ellipse.setCouleur(0, 0, 255);
-        else if (couleur == "jaune") ellipse.setCouleur(255, 255, 0);
-        else if (couleur == "cyan") ellipse.setCouleur(0, 255, 255);
-        else if (couleur == "magenta") ellipse.setCouleur(255, 0, 255);
-        else if (couleur == "blanc") ellipse.setCouleur(255, 255, 255);
-        else ellipse.randomCouleur();
-        l.ajouter(ellipse);
+        ellipse.randomCouleur();
+        return ellipse;
 }
 
-bool handleEvent(Liste &l)
+bool handleEvent(Liste &l, Mur m)
 {
     SDL_Event e; 
     while(SDL_PollEvent(&e)){
@@ -113,20 +41,48 @@ bool handleEvent(Liste &l)
             if (clickOnEllipse(l, e) != nullptr){
                 l.supprimer(*clickOnEllipse(l, e));
             }
-            else {
-                generateEllipse(l, e.motion.x, e.motion.y, "");
+            //sinon si la souris ne clique pas sur le mur, on ajoute une ellipse
+            else if (!m.clic(e.motion.x, e.motion.y)){
+                Ellipse el = generateEllipse(e.motion.x, e.motion.y);
+                while (el.dansMur(m)){
+                    el = generateEllipse(e.motion.x, e.motion.y);
+                }
+                l.ajouter(el);
             }
         }
     }
     return true;
 }
 
+Ellipse generateRandomEllipse(Mur mur, string couleur){
+    Ellipse ellipse;
+    ellipse.rayon = rand() % 50 +10;
+    ellipse.x = rand() % SCREEN_WIDTH + 10;
+    ellipse.y = rand() % SCREEN_HEIGHT +10;
+    while (ellipse.dansMur(mur) || ellipse.x + ellipse.rayon > SCREEN_WIDTH || ellipse.y + ellipse.rayon > SCREEN_HEIGHT){
+        ellipse.x = rand() % SCREEN_WIDTH + 10;
+        ellipse.y = rand() % SCREEN_HEIGHT +10;
+    }
+
+    ellipse.randomVitesse();
+        if (couleur == "rouge") ellipse.setCouleur(255, 0, 0);
+        else if (couleur == "vert") ellipse.setCouleur(0, 255, 0);
+        else if (couleur == "bleu") ellipse.setCouleur(0, 0, 255);
+        else if (couleur == "jaune") ellipse.setCouleur(255, 255, 0);
+        else if (couleur == "cyan") ellipse.setCouleur(0, 255, 255);
+        else if (couleur == "magenta") ellipse.setCouleur(255, 0, 255);
+        else if (couleur == "blanc") ellipse.setCouleur(255, 255, 255);
+        else ellipse.randomCouleur();
+    return ellipse;
+}
+
 int main(int argc, char** argv) {
+    srand(time(NULL));
     SDL_Window* gWindow;
     SDL_Renderer* renderer;
     bool is_running = true; 
     Mur mur1;
-    mur1.init(0, 150, 200, 150);
+    mur1.init(rand() % 100 + 10, rand() % 100 + 10, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT);
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
@@ -138,12 +94,12 @@ int main(int argc, char** argv) {
     if (argc > 1){
         nbEllipse = argc;
         for (int i = 1 ; i < argc ; i++){
-            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, argv[i]);
+            liste.ajouter(generateRandomEllipse(mur1, argv[i]));
         }    
     }  
     else {
         for(int i = 0 ; i < nbEllipse ; i++){
-            generateEllipse(liste, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "");
+            liste.ajouter(generateRandomEllipse(mur1, ""));
         }
     } 
     if (!gWindow)
@@ -158,7 +114,7 @@ int main(int argc, char** argv) {
     while(true)
     {
         // INPUTS
-        is_running = handleEvent(liste);
+        is_running = handleEvent(liste, mur1);
         if (!is_running)
             break;
         // GESTION ACTEURS
@@ -167,7 +123,7 @@ int main(int argc, char** argv) {
         Cellule *celluleActuelle = liste.premier;
         while (celluleActuelle != nullptr)
         {
-            celluleActuelle->ellipse.deplacer(SCREEN_HEIGHT, SCREEN_WIDTH);
+            celluleActuelle->ellipse.deplacer(SCREEN_HEIGHT, SCREEN_WIDTH, mur1);
             celluleActuelle = celluleActuelle->suivant;
         }
         
@@ -177,7 +133,7 @@ int main(int argc, char** argv) {
         
         // DESSIN FRAME
         mur1.draw(renderer);
-        draw(renderer, liste);
+        liste.draw(renderer);
 
         // VALIDATION FRAME
         SDL_RenderPresent(renderer);

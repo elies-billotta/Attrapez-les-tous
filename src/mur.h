@@ -1,8 +1,9 @@
-#include "point.h"
+#include "ellipse.h"
 #include "application_ui.h"
 
 #ifndef MUR_H
 #define MUR_H
+
 struct Mur{
     int x;
     int y;
@@ -13,5 +14,7 @@ struct Mur{
     void init(int x, int y, int w, int h);
 
     void draw(SDL_Renderer* renderer);
+
+    bool clic(int x, int y);
 };
 #endif
