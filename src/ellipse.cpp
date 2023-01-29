@@ -37,10 +37,8 @@ void Ellipse::deplacer(int SCREEN_HEIGHT, int SCREEN_WIDTH, Mur mur){
     }
     if (this->y + this->rayon >= SCREEN_HEIGHT || this->y - this->rayon <= 0 ){
         this->vy = -this->vy;
-    }
-    
+    } 
     if (collision(mur) != ""){
-        cout << collision(mur) << endl;
         if (collision(mur) == "gauche" || collision(mur) == "droite"){
             this->vx = -this->vx;
         }
