@@ -74,9 +74,6 @@ void Ellipse::setCouleur(int r, int g, int b){
 }
 
 std::string Ellipse::collision(Mur mur){
-
-
-
     if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h){
         if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w /2){
             if (this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h / 2){
@@ -99,7 +96,4 @@ std::string Ellipse::collision(Mur mur){
         }
     }
     return "";
-} 
-
-
-
+}
