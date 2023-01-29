@@ -125,9 +125,8 @@ int main(int argc, char** argv) {
     SDL_Window* gWindow;
     SDL_Renderer* renderer;
     bool is_running = true; 
-
-    
-    SDL_Rect wall1 = { 0, 150, 200, 150 };
+    Mur mur1;
+    mur1.init(0, 150, 200, 150);
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
@@ -177,7 +176,7 @@ int main(int argc, char** argv) {
         SDL_RenderClear(renderer);
         
         // DESSIN FRAME
-        drawRect(renderer, wall1);
+        mur1.draw(renderer);
         draw(renderer, liste);
 
         // VALIDATION FRAME
