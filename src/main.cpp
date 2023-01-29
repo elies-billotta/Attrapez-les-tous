@@ -7,72 +7,6 @@
 #include <iostream>
 using namespace std;
 
-bool checkCollision( SDL_Rect a, SDL_Rect b )
-{
-    //The sides of the rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
-
-    //Calculate the sides of rect A
-    leftA = a.x;
-    rightA = a.x + a.w;
-    topA = a.y;
-    bottomA = a.y + a.h;
-
-    //Calculate the sides of rect B
-    leftB = b.x;
-    rightB = b.x + b.w;
-    topB = b.y;
-    bottomB = b.y + b.h;
-     //If any of the sides from A are outside of B
-    if( bottomA <= topB )
-    {
-        return false;
-    }
-
-    if( topA >= bottomB )
-    {
-        return false;
-    }
-
-    if( rightA <= leftB )
-    {
-        return false;
-    }
-
-    if( leftA >= rightB )
-    {
-        return false;
-    }
-
-    //If none of the sides from A are outside B
-    return true;
-}
-
-
-
-
-void draw(SDL_Renderer* renderer, Liste &l)
-{
-    Cellule *celluleActuelle = l.premier;
-    while (celluleActuelle != nullptr)
-    {
-        Ellipse e = celluleActuelle->ellipse;
-        filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255);
-        celluleActuelle = celluleActuelle->suivant;
-    }
-
-}
-
-void drawRect(SDL_Renderer* renderer, SDL_Rect wall ){
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &wall);
-
-}
-
-
 Ellipse* clickOnEllipse(Liste &l, SDL_Event &e){
     Cellule *celluleActuelle = l.premier;
     while (celluleActuelle != nullptr)
@@ -126,7 +60,7 @@ int main(int argc, char** argv) {
     SDL_Renderer* renderer;
     bool is_running = true; 
     Mur mur1;
-    mur1.init(0, 150, 200, 150);
+    mur1.init(100, 150, 200, 150);
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
@@ -167,7 +101,7 @@ int main(int argc, char** argv) {
         Cellule *celluleActuelle = liste.premier;
         while (celluleActuelle != nullptr)
         {
-            celluleActuelle->ellipse.deplacer(SCREEN_HEIGHT, SCREEN_WIDTH);
+            celluleActuelle->ellipse.deplacer(SCREEN_HEIGHT, SCREEN_WIDTH, mur1);
             celluleActuelle = celluleActuelle->suivant;
         }
         
@@ -177,7 +111,7 @@ int main(int argc, char** argv) {
         
         // DESSIN FRAME
         mur1.draw(renderer);
-        draw(renderer, liste);
+        liste.draw(renderer);
 
         // VALIDATION FRAME
         SDL_RenderPresent(renderer);

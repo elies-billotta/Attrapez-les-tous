@@ -1,5 +1,6 @@
 #include "mur.h"
 #include "application_ui.h"
+#include "ellipse.h"
 #include <iostream>
 using namespace std;
 

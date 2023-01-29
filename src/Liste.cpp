@@ -1,6 +1,7 @@
 #include "Cellule.h"
 #include "ellipse.h"
 #include "Liste.h"
+#include "SDL2_gfxPrimitives.h"
 #include <iostream>
 using namespace std;
 
@@ -39,5 +40,17 @@ void Liste::supprimer(Ellipse e){
         cellulePrecedente = celluleActuelle;
         celluleActuelle = celluleActuelle->suivant;
     }
+}
+
+void Liste::draw(SDL_Renderer* renderer)
+{
+    Cellule *celluleActuelle = premier;
+    while (celluleActuelle != nullptr)
+    {
+        Ellipse e = celluleActuelle->ellipse;
+        filledEllipseRGBA(renderer, e.x, e.y, e.rayon, e.rayon, e.r, e.g, e.b, 255);
+        celluleActuelle = celluleActuelle->suivant;
+    }
+
 }
 
