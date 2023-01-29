@@ -75,25 +75,19 @@ void Ellipse::setCouleur(int r, int g, int b){
 
 std::string Ellipse::collision(Mur mur){
     if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h){
-        if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w /2){
-            if (this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h / 2){
-                return "haut";
-            }
-            else{
-                return "bas";
-            }
+        if (this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h && this->x+this->rayon <= mur.x){
+            return "gauche";
         }
-        else{
-            if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w / 2){
-                return "gauche";
-            }
-            else{
-                return "droite";
-            }
+        else if (this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y+this->rayon <= mur.y){
+            return "haut";
         }
-        if (this->x + this->rayon == mur.x && this->y + this->rayon == mur.y || this->x + this->rayon == mur.x && this->y - this->rayon == mur.y + mur.h || this->x - this->rayon == mur.x + mur.w && this->y + this->rayon == mur.y || this->x - this->rayon == mur.x + mur.w && this->y - this->rayon == mur.y + mur.h){ 
-            return "coin";
+        else if(this->y + this->rayon >= mur.y && this->y - this->rayon <= mur.y + mur.h && this->x+this->rayon >= mur.x + mur.w){
+            return "droite";
         }
+        else if(this->x + this->rayon >= mur.x && this->x - this->rayon <= mur.x + mur.w && this->y+this->rayon >= mur.y+mur.h){
+            return "bas";
+        }
+        else return "coin";
     }
     return "";
 }

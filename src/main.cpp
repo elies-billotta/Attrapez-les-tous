@@ -37,7 +37,7 @@ void generateEllipse(Liste &l, int posX, int posY, string couleur){
         l.ajouter(ellipse);
 }
 
-bool handleEvent(Liste &l)
+bool handleEvent(Liste &l, Mur m)
 {
     SDL_Event e; 
     while(SDL_PollEvent(&e)){
@@ -47,7 +47,8 @@ bool handleEvent(Liste &l)
             if (clickOnEllipse(l, e) != nullptr){
                 l.supprimer(*clickOnEllipse(l, e));
             }
-            else {
+            //sinon si la souris ne clique pas sur le mur, on ajoute une ellipse
+            else if (!m.clic(e.motion.x, e.motion.y)){
                 generateEllipse(l, e.motion.x, e.motion.y, "");
             }
         }
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
     SDL_Renderer* renderer;
     bool is_running = true; 
     Mur mur1;
-    mur1.init(100, 150, 200, 150);
+    mur1.init(200, 200, 200, 150);
 
     // Création de la fenêtre
     gWindow = init("Awesome Game");
@@ -92,7 +93,7 @@ int main(int argc, char** argv) {
     while(true)
     {
         // INPUTS
-        is_running = handleEvent(liste);
+        is_running = handleEvent(liste, mur1);
         if (!is_running)
             break;
         // GESTION ACTEURS

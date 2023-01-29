@@ -16,5 +16,8 @@ struct Mur{
 
     void draw(SDL_Renderer* renderer);
 
+    bool clic(int x, int y);
+    
+
 };
 #endif
