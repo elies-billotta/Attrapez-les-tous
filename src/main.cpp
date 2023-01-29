@@ -125,6 +125,8 @@ int main(int argc, char** argv) {
     SDL_Window* gWindow;
     SDL_Renderer* renderer;
     bool is_running = true; 
+
+    
     SDL_Rect wall1 = { 0, 150, 200, 150 };
 
     // Création de la fenêtre
